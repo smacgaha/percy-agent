@@ -1,0 +1,10 @@
+// {
+//   "framework": "mocha",
+//   "launchers": [],
+//   "launch_in_dev": [
+//     "Firefox"
+//   ],
+//   "src_files": [
+//     "./test/dist/*.js"
+//   ]
+// }
