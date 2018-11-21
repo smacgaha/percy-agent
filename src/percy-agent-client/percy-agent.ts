@@ -43,7 +43,8 @@ export default class PercyAgent {
 
   private domSnapshot(documentObject: Document): string {
     let doctype = this.getDoctype(documentObject)
-    let dom = this.stabalizeDOM(documentObject.documentElement as HTMLElement) as HTMLElement
+    let cssSerializedDocument = this.serializeCssOm(documentObject as HTMLDocument);
+    let dom = this.stabalizeDOM(cssSerializedDocument.documentElement as HTMLElement);
 
     let domClone = dom.cloneNode(true) as HTMLElement
 
@@ -87,6 +88,37 @@ export default class PercyAgent {
     })
 
     return domClone
+  }
+
+  private serializeCssOm(document: HTMLDocument) {
+    // snagged from MDN
+    // The goal is to take all the CSS created in the CSS Object Model (CSSOM)
+    // and inject it into the DOM so Percy can render it safely in our browsers
+    let cssOmStyles = [].slice.call(document.styleSheets).reduce((prev: String, styleSheet: CSSStyleSheet) => {
+      // Make sure it has a rulesheet, does NOT have a href (no external stylesheets), and isn't already in the DOM.
+      let hasHref = styleSheet.href;
+      let hasStyleInDom = styleSheet.ownerNode.innerText.length > 0;
+
+      if (styleSheet.cssRules && !hasHref && !hasStyleInDom) {
+        return (
+          prev +
+            [].slice.call(styleSheet.cssRules).reduce((prev: String, cssRule: CSSRule) => {
+              return prev + cssRule.cssText;
+            }, "")
+        );
+      } else {
+        return prev;
+      }
+    }, "");
+
+    let $stylesheet = document.createElement('style');
+    $stylesheet.type = 'text/css';
+
+    let styles = document.createTextNode(cssOmStyles);
+    $stylesheet.appendChild(styles);
+    document.head!.appendChild($stylesheet);
+
+    return document;
   }
 
   private stabalizeDOM(dom: HTMLElement) {
