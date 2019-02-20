@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import * as path from 'path'
 import Constants from '../services/constants'
+import logger from '../utils/logger'
 
 export function agentJsFilename() {
   try {
@@ -29,6 +30,7 @@ export async function postSnapshot(body: any) {
     } as any).then(() => {
       return true
     }).catch((error) => {
+      logger.error(`Failed to post snapshot: ${error}`)
       return false
     })
   }
