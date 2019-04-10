@@ -7,7 +7,7 @@ install:
 test_script:
   - .\bin\run --version
   - .\bin\run --help
-  - .\node_modules\.bin\nyc --nycrc-path node_modules/@oclif/nyc-config/.nycrc npm test
+  - .\node_modules\.bin\nyc --nycrc-path node_modules/@oclif/nyc-config/.nycrc npm run test-windows
 after_test:
   - .\node_modules\.bin\nyc --nycrc-path node_modules/@oclif/nyc-config/.nycrc report --reporter text-lcov > coverage.lcov
   - ps: |
