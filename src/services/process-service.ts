@@ -1,5 +1,6 @@
 import * as childProcess from 'child_process'
 import * as fs from 'fs'
+import logger from '../utils/logger'
 
 export default class ProcessService {
   static PID_PATH = './.percy.pid'
@@ -34,7 +35,7 @@ export default class ProcessService {
     if (this.isRunning()) {
       const pid = this.getPid()
       fs.unlinkSync(ProcessService.PID_PATH)
-
+      console.log(`***** Trying to kill process ${pid}`)
       process.kill(pid, 'SIGHUP')
     }
   }

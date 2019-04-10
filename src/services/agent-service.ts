@@ -62,7 +62,7 @@ export default class AgentService {
     }
 
     await this.buildService.finalize()
-    if (this.server) { await this.server.close() }
+    if (this.server) { console.log('Stopping server'); await this.server.close() }
   }
 
   private async handleSnapshot(request: express.Request, response: express.Response) {
